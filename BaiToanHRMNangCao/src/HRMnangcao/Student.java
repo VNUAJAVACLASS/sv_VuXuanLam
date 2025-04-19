@@ -1,10 +1,11 @@
 package HRMnangcao;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Student extends Human {
 	private String class_;
-	private HashMap<String,Subject> subjectList = new HashMap<String,Subject>();
+	private Map<String,iCreditSubject> subjectList = new HashMap<String,iCreditSubject>();
 	
 	public Student(){
 		
@@ -39,20 +40,20 @@ public class Student extends Human {
 		int sumCredit = 0;
 	    int sumGrade = 0;
 
-	    for (HashMap.Entry<String, Subject> entry : subjectList.entrySet()) {
-	        Subject subject = entry.getValue();
-	        sumCredit += subject.getCredit();
-	        sumGrade += subject.calConversionMark(subject.calGrade()) * subject.getCredit();
+	    for (HashMap.Entry<String, iCreditSubject> entry : subjectList.entrySet()) {
+	        iCreditSubject iCreditSubject = entry.getValue();
+	        sumCredit += iCreditSubject.getCredit();
+	        sumGrade += iCreditSubject.calConversionMark(iCreditSubject.calGrade()) * iCreditSubject.getCredit();
 	    }
 	    return (float) sumGrade / sumCredit;
 	}
 	
-	public HashMap<String, Subject> searchSubject(String key) {
-	    HashMap<String, Subject> resultSearch = new HashMap<>();
-	    for (HashMap.Entry<String, Subject> entry : subjectList.entrySet()) {
-	        Subject subject = entry.getValue();
-	        if (subject.getSubjectName().contains(key)) {
-	        	resultSearch.put(entry.getKey(), subject);
+	public HashMap<String, iCreditSubject> searchSubject(String key) {
+	    HashMap<String, iCreditSubject> resultSearch = new HashMap<>();
+	    for (HashMap.Entry<String, iCreditSubject> entry : subjectList.entrySet()) {
+	    	iCreditSubject iCreditSubject = entry.getValue();
+	        if (iCreditSubject.getSubjectName().contains(key)) {
+	        	resultSearch.put(entry.getKey(), iCreditSubject);
 	        }
 	    }
 	    return resultSearch;
@@ -82,7 +83,7 @@ public class Student extends Human {
 
 	@Override
 	public String toString() {
-		StringBuilder stringb = new StringBuilder();
+		 StringBuilder stringb = new StringBuilder();
 		 stringb.append("====================////==================\n");
 		 stringb.append("Ho va ten sinh vien: ").append(fullname).append("\n");
 		 stringb.append("Ma sinh vien: ").append(code).append("\n");
@@ -93,7 +94,7 @@ public class Student extends Human {
 			 return stringb.toString();
 		 }
 		stringb.append("Danh sach mon hoc:\n");
-		for (Subject s : subjectList.values()) {
+		for (iCreditSubject s : subjectList.values()) {
 		    	stringb.append(s).append("\n");
 		}	
 		stringb.append("Diem trung binh hoc ky: ").append(calTermAverageMark()).append("\n");

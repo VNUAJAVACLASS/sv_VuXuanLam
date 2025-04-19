@@ -1,10 +1,10 @@
 package HRMnangcao;
-public abstract class Subject {
+public abstract class Subject implements iCreditSubject{
 	private String subjectCode;
 	private String subjectName;
 	private int credit;
 	
-	public Subject() {
+	public Subject()  {
 		
 	}
 	
@@ -15,7 +15,7 @@ public abstract class Subject {
 		this.credit = credit;
 	}
 	
-	public abstract float calConversionMark();
+	//public abstract float calConversionMark();
 	
 	public float calConversionMark(String grade) {
         switch (grade) {
@@ -43,9 +43,9 @@ public abstract class Subject {
         return "F";
 	}
 	
-	public float calSubjectMark() {
-		return 0;
-	}
+//	public float calSubjectMark() {
+//		return 0;
+//	}
 
 	public int getCredit() {
 		return credit;

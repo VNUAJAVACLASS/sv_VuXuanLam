@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class HRM {
 	private HashMap<String,Human> hrList = new HashMap<String,Human>();
-	private HashMap<String,Subject> subList = new HashMap<String,Subject>();
+	private HashMap<String,iCreditSubject> subList = new HashMap<String,iCreditSubject>();
 
 	public HRM() {
 		
@@ -15,7 +15,7 @@ public class HRM {
 		this.hrList.put(hm.getCode(), hm);
 	}
 	
-	public void addSub(Subject sub) {
+	public void addSub(iCreditSubject sub) {
 		this.subList.put(sub.getSubjectCode(), sub);
 	}
 	
@@ -71,20 +71,6 @@ public class HRM {
 		return null;
 	}
 	
-	public Subject searchSubject(String subjectCode) {
-	    for (Subject subject : subList.values()) {
-	        if (subject.getSubjectCode().equals(subjectCode)) {
-	            return subject; 
-	        }
-	    }
-	    return null; 
-	}
-
-	public void printAllSubject() {
-		for (Subject sub : subList.values()) {
-			System.out.println("(" + sub.getSubjectCode() +")" + sub.getSubjectName() + " | " + sub.getCredit());
-		}
-	}
 	
 	public void registerSubject(Scanner sc) {
 	    System.out.println("Chon sinh vien: ");
@@ -100,19 +86,11 @@ public class HRM {
 	    }
 
 	    System.out.println("Chon mon hoc muon dang ky: ");
-	    printAllSubject();
 	    System.out.print("Nhap ma mon hoc muon dang ky: ");
-	    String subjectCode = sc.nextLine();
 
+	  
 	   
-	    Subject subject = searchSubject(subjectCode);
-	    if (subject == null) {
-	        System.out.println("Môn học không tồn tại!");
-	        return;
-	    }
-
-	   
-	    student.addSubject(subject);
+	    
 	    System.out.println("Đăng ký môn học thành công!");
 	}
 
@@ -122,8 +100,8 @@ public class HRM {
         addHm(new Student("671330", "Tran Viet V", "VNUA" , "Ha Nam"));   
         addHm(new Student("671101", "Pham Thanh D", "VNUA"));
         addHm(new Student("671605", "Vu Xuan Lam", "K67CNPMB","Nam Dinh"));
-		JavaSubject javaSub = new JavaSubject("TH01","Lap trinh java",3);
-		PythonSubject pythonSub = new PythonSubject("TH02", "Lap trinh Python", 2); 
+		iCreditSubject javaSub = new JavaSubject("TH01","Lap trinh java",3);
+		iCreditSubject pythonSub = new PythonSubject("TH02", "Lap trinh Python", 2); 
 
 		addSub(pythonSub);
 		addSub(javaSub);
