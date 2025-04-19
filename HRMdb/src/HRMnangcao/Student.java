@@ -23,7 +23,7 @@ public class Student extends Human {
 		this.class_ = class_;
 	}
 
-	public Student(String code, String fullname, String class_, String address){
+	public Student(String code, String fullname, String address,String class_){
 		super(code, fullname, address);
 		this.class_ = class_;
 	}

@@ -6,7 +6,8 @@ public abstract class Human {
 	protected String address;
 	protected String code;
 	protected String fullname;
-	
+	protected int type;
+
 	public Human(){
 		
 	};
@@ -24,6 +25,11 @@ public abstract class Human {
 		this.code = code;
 		this.fullname = fullname;
 		this.address = address;
+	}
+	
+	public Human(String code, String fullname, String address,int type){
+		this(code,fullname,address);
+		this.type=type;
 	}
 	
 	public abstract void enterInfo(Scanner sc);
@@ -51,6 +57,13 @@ public abstract class Human {
 
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
+	}
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 }

@@ -5,6 +5,14 @@ import java.util.Scanner;
 public class Lecturer extends Human{
 	private String password;
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Lecturer() {
 		
 	}
@@ -17,6 +25,12 @@ public class Lecturer extends Human{
 	public Lecturer(String code, String fullname, String address) {
 		super(code, fullname, address);
 	}
+	
+
+	public Lecturer(String code, String fullname, String address,String password) {
+		super(code, fullname, address);
+		this.password=password;
+	}
 	@Override
 	public void enterInfo(Scanner sc) {
 		System.out.println("Nhap vao ten: ");
@@ -27,6 +41,7 @@ public class Lecturer extends Human{
 		this.address = sc.nextLine();
 		System.out.println("Nhap vao password: ");
 		this.password = sc.nextLine();
+		
 	}
 
 	@Override

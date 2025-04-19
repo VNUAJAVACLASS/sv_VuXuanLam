@@ -1,13 +1,20 @@
 package HRMnangcao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
+
+import model.IUserDAO;
+import model.UserDAO;
 
 public class HRM {
 	private HashMap<String,Human> hrList = new HashMap<String,Human>();
 	private HashMap<String,Subject> subList = new HashMap<String,Subject>();
 
+	private IUserDAO iUserdao;
 	public HRM() {
+		iUserdao = new UserDAO();
 		
 	}
 	
@@ -20,7 +27,7 @@ public class HRM {
 	}
 	
 	public void addHR(Scanner sc) {
-        System.out.print("Nhap loai nhan su (1 - Lecturer, 2 - Student): ");
+        System.out.print("Nhap loai nhan su (1 - Lecturer, 0 - Student): ");
         int type = sc.nextInt();
         sc.nextLine();
         
@@ -28,47 +35,56 @@ public class HRM {
         if (type == 1) {
             hm = new Lecturer();
             hm.enterInfo(sc);
-        } else if (type == 2) {
-            hm = new Student();
-            hm.enterInfo(sc);
+            hm.setType(type);
+            iUserdao.addUser(hm);
+        } else if (type == 0) {
+        	 hm = new Student();
+             hm.enterInfo(sc);
+             hm.setType(type);
+             iUserdao.addUser(hm);
         } else {
             System.out.println("Loai nhan su khong hop le!");
             return;
         }
 
-        hm.enterInfo(sc);
-        this.addHm(hm);
 	}
 	
 	public void printHRList() {
-		System.out.println("Danh sach nhan su la:");
-		for (Human human : hrList.values()) {
-            System.out.println(human);		}
+		List<Human> userList = new ArrayList<Human>();
+		userList = iUserdao.getAllUsers();
+		System.out.println("Danh sach user la: ");
+		for(Human user :userList) {
+			System.out.println(user);
+		}
 	}
 	
 	public void printLecturer() {
+		List<Human> userList = new ArrayList<Human>();
+		userList = iUserdao.getAllUsers();
 		System.out.println("Danh sach giang vien la: ");
-		for (Human human : hrList.values()) {
-			if (human instanceof Lecturer) {
-	            System.out.println(human);			}
+		for(Human user :userList) {
+			if(user instanceof Lecturer) {
+			System.out.println(user);
+			}
 		}
 	}
 	
 	public void printStudent() {
+		List<Human> userList = new ArrayList<Human>();
+		userList = iUserdao.getAllUsers();
 		System.out.println("Danh sach sinh vien la: ");
-		for (Human human : hrList.values()) {
-			if (human instanceof Student) {
-	            System.out.println(human);			}
+		for(Human user :userList) {
+			if(user instanceof Student) {
+			System.out.println(user);
+			}
 		}
 	}
 	
 	public Human searchHuman(String code) {
-		for (Human human : hrList.values()) {
-			if (human.getCode().toLowerCase().equals(code)) {
-				return human;
-			}
-		}
-		return null;
+		Human user=null;
+		user=iUserdao.searchUserId(code);
+		
+		return user;
 	}
 	
 	public Subject searchSubject(String subjectCode) {
@@ -122,11 +138,7 @@ public class HRM {
         addHm(new Student("671330", "Tran Viet V", "VNUA" , "Ha Nam"));   
         addHm(new Student("671101", "Pham Thanh D", "VNUA"));
         addHm(new Student("671605", "Vu Xuan Lam", "K67CNPMB","Nam Dinh"));
-		JavaSubject javaSub = new JavaSubject("TH01","Lap trinh java",3);
-		PythonSubject pythonSub = new PythonSubject("TH02", "Lap trinh Python", 2); 
 
-		addSub(pythonSub);
-		addSub(javaSub);
     }
 
 	
