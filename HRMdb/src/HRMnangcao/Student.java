@@ -38,27 +38,15 @@ public class Student extends Human {
 	public float calTermAverageMark() {
 		int sumCredit = 0;
 	    int sumGrade = 0;
-
+	    StudentSubject stdsub = new StudentSubject();
 	    for (HashMap.Entry<String, Subject> entry : subjectList.entrySet()) {
 	        Subject subject = entry.getValue();
 	        sumCredit += subject.getCredit();
-	        sumGrade += subject.calConversionMark(subject.calGrade()) * subject.getCredit();
+	        sumGrade += stdsub.calConversionMark(stdsub.calGrade()) * subject.getCredit();
 	    }
 	    return (float) sumGrade / sumCredit;
 	}
 	
-	public HashMap<String, Subject> searchSubject(String key) {
-	    HashMap<String, Subject> resultSearch = new HashMap<>();
-	    for (HashMap.Entry<String, Subject> entry : subjectList.entrySet()) {
-	        Subject subject = entry.getValue();
-	        if (subject.getSubjectName().contains(key)) {
-	        	resultSearch.put(entry.getKey(), subject);
-	        }
-	    }
-	    return resultSearch;
-	}
-
-
 	
 	@Override
 	public void enterInfo(Scanner sc) {

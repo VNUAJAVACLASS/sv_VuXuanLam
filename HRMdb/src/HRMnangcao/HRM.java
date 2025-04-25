@@ -87,20 +87,6 @@ public class HRM {
 		return user;
 	}
 	
-	public Subject searchSubject(String subjectCode) {
-	    for (Subject subject : subList.values()) {
-	        if (subject.getSubjectCode().equals(subjectCode)) {
-	            return subject; 
-	        }
-	    }
-	    return null; 
-	}
-
-	public void printAllSubject() {
-		for (Subject sub : subList.values()) {
-			System.out.println("(" + sub.getSubjectCode() +")" + sub.getSubjectName() + " | " + sub.getCredit());
-		}
-	}
 	
 	public void registerSubject(Scanner sc) {
 	    System.out.println("Chon sinh vien: ");
@@ -116,20 +102,11 @@ public class HRM {
 	    }
 
 	    System.out.println("Chon mon hoc muon dang ky: ");
-	    printAllSubject();
+	   
 	    System.out.print("Nhap ma mon hoc muon dang ky: ");
-	    String subjectCode = sc.nextLine();
 
 	   
-	    Subject subject = searchSubject(subjectCode);
-	    if (subject == null) {
-	        System.out.println("Môn học không tồn tại!");
-	        return;
-	    }
-
-	   
-	    student.addSubject(subject);
-	    System.out.println("Đăng ký môn học thành công!");
+	  
 	}
 
 	public void initDemoData() {

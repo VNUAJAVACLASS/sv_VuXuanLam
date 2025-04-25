@@ -8,6 +8,7 @@ public class Main {
         boolean check = true;
         hrm.initDemoData();
         Scanner sc = new Scanner(System.in);
+        SubjectController scontroller = new SubjectController();
 
         while (check) {
             System.out.println("Chon chuc nang:");
@@ -16,9 +17,9 @@ public class Main {
             System.out.println("3. Xem danh sach giang vien.");
             System.out.println("4. Tim nhan su.");
             System.out.println("5. Them nhan su.");
-            System.out.println("6. Nhap diem sinh vien.");
-            System.out.println("7. Dang ky mon hoc.");
-            System.out.println("8. Thoat.");
+            System.out.println("6. Danh sach mon hoc.");
+            System.out.println("7. Them mon hoc.");
+            System.out.println("8. Dang ky mon hoc.");
             System.out.print("Chuc nang ban chon la: ");
             
             int choice = sc.nextInt();
@@ -48,14 +49,18 @@ public class Main {
                     waitForZero(sc);
                     break;
                 case 6:
-                    hrm.addHR(sc);
+                	scontroller.printSubjectList();
                     waitForZero(sc);
                     break;
                 case 7:
-                    hrm.registerSubject(sc);
+                    scontroller.addSubject(sc);
                     waitForZero(sc);
                     break;
                 case 8:
+                    scontroller.dangKyMonHoc(sc);
+                    waitForZero(sc);
+                    break;
+                case 9:
                     check = false;
                     break;
                 default:
