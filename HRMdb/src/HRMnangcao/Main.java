@@ -20,6 +20,7 @@ public class Main {
             System.out.println("6. Danh sach mon hoc.");
             System.out.println("7. Them mon hoc.");
             System.out.println("8. Dang ky mon hoc.");
+            System.out.println("9. Thoát chương trình.");
             System.out.print("Chuc nang ban chon la: ");
             
             int choice = sc.nextInt();
@@ -61,8 +62,8 @@ public class Main {
                     waitForZero(sc);
                     break;
                 case 9:
-                    check = false;
-                    break;
+                	System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
+                    return;
                 default:
                     System.out.println("Nhap sai thong tin");
                     break;

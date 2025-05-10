@@ -44,7 +44,7 @@ public class LichHocService {
 	 private void inNgay(int thu, LocalDate date, Ngay ngay) {
 	        System.out.println(inThu(thu) + (date != null ? " (" + date + ")" : "") + ":");
 	        if (ngay == null || ngay.getDanhSachMon().isEmpty()) {
-	            System.out.println("     🛌 Không có môn học.");
+	            System.out.println("Không có môn học.");
 	            return;
 	        }
 	        for (MonHoc mh : ngay.getDanhSachMon()) {
@@ -52,9 +52,8 @@ public class LichHocService {
 	        }
 	    }
 	 private void inMon(MonHoc mh) {
-	        System.out.println("    Môn học:" + mh.getMaMonHoc() + " - " + mh.getTenMonHoc());
-	        System.out.println("    Tiết BD: " + mh.getTietBatDau() + ", Số tiết: " + mh.getSoTiet());
-	        System.out.println("    Phòng: " + mh.getPhongHoc() + ", GV: " + mh.getGiangVien());
+		 	String thoiGian = doiTietSangGio(mh.getTietBatDau(), mh.getSoTiet());
+	        System.out.println("Mã môn:" + mh.getMaMonHoc() + "|| Tên môn: " + mh.getTenMonHoc()+"|| Tiết bắt đầu: " + mh.getTietBatDau() + ", Số tiết: " + mh.getSoTiet()+ "|| Thời gian: "+thoiGian+ "|| Phòng học: " + mh.getPhongHoc() + "|| Giảng viên: " + mh.getGiangVien());
 	    }
 	 public void inTKBTuanHienTai() {
 	        LocalDate today = LocalDate.now();
@@ -75,6 +74,7 @@ public class LichHocService {
 	        }
 	    }
 
+	 
 	    public void inTKBTheoTuan(int tuan) {
 	        Tuan t = tkb.getDanhSachTuan().get(tuan);
 	        if (t == null) {
@@ -111,7 +111,7 @@ public class LichHocService {
 	        for (Map.Entry<Integer, Tuan> entryTuan : danhSachTuan.entrySet()) {
 	            int soTuan = entryTuan.getKey();
 	            Tuan tuan = entryTuan.getValue();
-	            System.out.println("====== Tuần " + soTuan + " ======");
+	            System.out.println("====== Thời khóa biểu tuần " + soTuan + " ======");
 	            printAll(soTuan, tuan);
 	        }
 	    }
@@ -125,4 +125,29 @@ public class LichHocService {
 	            inNgay(thu, date, ngay);
 	        }
 	    }
+	    public static String doiTietSangGio(int tietBatDau, int soTiet) {
+	        int tietDuration = 50;
+	        int breakDuration = 5;
+	        
+	        int startHour = 7;
+	        int startMinute = 0;
+
+	        
+	        int totalMinutes = 0;
+	        for (int i = 1; i < tietBatDau; i++) {
+	            totalMinutes += tietDuration + breakDuration;
+	        }
+
+	        
+	        int gioBatDau = startHour + (startMinute + totalMinutes) / 60;
+	        int phutBatDau = (startMinute + totalMinutes) % 60;
+
+	        
+	        int duration = soTiet * tietDuration + (soTiet - 1) * breakDuration;
+	        int gioKetThuc = gioBatDau + (phutBatDau + duration) / 60;
+	        int phutKetThuc = (phutBatDau + duration) % 60;
+
+	        return String.format("%02d:%02d - %02d:%02d", gioBatDau, phutBatDau, gioKetThuc, phutKetThuc);
+	    }
+
 }

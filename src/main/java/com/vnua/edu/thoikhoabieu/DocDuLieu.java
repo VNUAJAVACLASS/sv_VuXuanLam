@@ -92,31 +92,18 @@ public class DocDuLieu {
             }
         }
     }
-	public static List<Integer> extractWeeks(String weeksText) {
+	public static List<Integer> extractWeeks(String weekText) {
 	    List<Integer> weeks = new ArrayList<>();
-	    // Kiểm tra nếu tuần học có dấu "-" và có dữ liệu hợp lệ
-	    if (weeksText != null && !weeksText.isEmpty()) {
-	        String[] weekParts = weeksText.split("-");
-	        if (weekParts.length == 2) {
-	            try {
-	                int startWeek = Integer.parseInt(weekParts[0].trim());
-	                int endWeek = Integer.parseInt(weekParts[1].trim());
-	                for (int i = startWeek; i <= endWeek; i++) {
-	                    weeks.add(i);
-	                }
-	            } catch (NumberFormatException e) {
-	                System.out.println("Lỗi khi chuyển đổi tuần học: " + weeksText);
-	            }
-	        } else if (weekParts.length == 1) {
-	            try {
-	                int week = Integer.parseInt(weekParts[0].trim());
-	                weeks.add(week);
-	            } catch (NumberFormatException e) {
-	                System.out.println("Lỗi khi chuyển đổi tuần học: " + weeksText);
-	            }
+	    for (int i = 0; i < weekText.length(); i++) {
+	        char c = weekText.charAt(i);
+	        if (Character.isDigit(c)) {
+	            weeks.add(i + 1);
 	        }
 	    }
 	    return weeks;
 	}
+
+
+
 
 }

@@ -1,7 +1,5 @@
 package com.vnua.edu.thoikhoabieu;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MonHoc {
 	private String maMonHoc;
