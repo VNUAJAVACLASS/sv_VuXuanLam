@@ -6,11 +6,13 @@ import java.util.Map;
 public class LichHocService {
 	private final LichHoc tkb;
 	
-	public LichHocService(String url) {
+	public LichHocService() {
+		LoginVnua loginVnua = new LoginVnua();
+	    String htmlTKB = loginVnua.Login();
         try {
-            this.tkb = DocDuLieu.parseTKB(url);
+            this.tkb = DocDuLieu.parseTKB(htmlTKB);
         } catch (Exception e) {
-            throw new RuntimeException("Không thể đọc thời khóa biểu từ URL: " + url, e);
+            throw new RuntimeException("Không thể đọc thời khóa biểu từ URL: " + e);
         }
     }
 	public void printTKBToday() {

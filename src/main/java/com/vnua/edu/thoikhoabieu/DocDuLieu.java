@@ -5,16 +5,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 public class DocDuLieu {
-	public static LichHoc parseTKB(String filePath) throws Exception {
-	    InputStream inputStream = new FileInputStream(filePath);
-	    
-	    Document doc = Jsoup.parse(inputStream, String.valueOf(StandardCharsets.UTF_8), "");
+	public static LichHoc parseTKB(String htmlTKB) throws Exception {
+	   
+	    Document doc = Jsoup.parse(htmlTKB);
 	    LichHoc tkb = new LichHoc();
 	    
 	    Element table = doc.select("table").first();
