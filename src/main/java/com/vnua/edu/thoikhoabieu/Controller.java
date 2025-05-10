@@ -16,14 +16,13 @@ public class Controller {
         int choice;
 
         do {
-            System.out.println("\n=== THỜI KHÓA BIỂU ===");
-            System.out.println("1. In thời khóa biểu cả kỳ");
-            System.out.println("2. In thời khóa biểu hôm nay");
-            System.out.println("3. In thời khóa biểu tuần hiện tại");
-            System.out.println("4. In thời khóa biểu theo tuần");
-            System.out.println("5. In thời khóa biểu theo ngày");
+            System.out.println("1. Thời khóa biểu cả kỳ");
+            System.out.println("2. Thời khóa biểu hôm nay");
+            System.out.println("3. Thời khóa biểu tuần hiện tại");
+            System.out.println("4. Thời khóa biểu theo tuần");
+            System.out.println("5. Thời khóa biểu theo ngày");
             System.out.println("6. Thoát");
-            System.out.print("Chọn hành động (1-6): ");
+            System.out.print("============Mời bạn chọn=============");
             choice = scanner.nextInt();
 
             switch (choice) {
