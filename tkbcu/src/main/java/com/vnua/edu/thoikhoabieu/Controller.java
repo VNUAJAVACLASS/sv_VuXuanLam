@@ -4,10 +4,11 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Controller {
+	private static final String TKB_URL = "D:\\sv_VuXuanLam\\tkb_vuxuanlam.html";
     private LichHocService lhService;
 
     public Controller() {
-        this.lhService = new LichHocService();
+        this.lhService = new LichHocService(TKB_URL);
     }
 
     public void start() {
