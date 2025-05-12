@@ -144,7 +144,7 @@ public class LoginVnua {
             Matcher matcher = pattern.matcher(text);
 
             if (matcher.find()) {
-                String firstDay = matcher.group(1); // "13/01/2025"
+                String firstDay = matcher.group(1); 
                 return firstDay;
             }
         }

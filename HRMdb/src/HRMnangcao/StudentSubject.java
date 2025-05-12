@@ -12,12 +12,15 @@ public class StudentSubject{
 	private float midexammark2;
 	private float midexammark3;
 	private float finalexammark;
-	private SubjectDAO subjectdao;
+	private SubjectDAO subjectdao = new SubjectDAO();
 	private Subject subject;
-	
+	private Student student;
 	public StudentSubject() {
-	    subjectdao = new SubjectDAO();
+	   
 	}
+	public StudentSubject(SubjectDAO subjectdao) {
+        this.subjectdao = subjectdao;
+    }
 	public StudentSubject(String usercode, String subjectcode) {
 		this.usercode= usercode;
 		this.subjectcode=subjectcode;
@@ -85,7 +88,7 @@ public class StudentSubject{
 	}
 	
 	public String calGrade() {
-        float subjectMark = calSubjectMark();
+        float subjectMark = calSubjectMark(student.getCode(), subject.getSubjectCode());
         
         if (subjectMark >= 8.5) return "A";
         if (subjectMark >= 7.5) return "B+";
@@ -134,11 +137,44 @@ public class StudentSubject{
 		this.finalexammark = sc.nextFloat();
 	}
 
-	public float calSubjectMark() {
-	    return subject.getHesodiem1() * attendancemark
-	         + subject.getHesodiem2() * midexammark1
-	         + subject.getHesodiem3() * midexammark2
-	         + subject.getHesodiem4() * midexammark3
-	         + subject.getHesodiem5() * finalexammark;
+	public float calSubjectMark(String userCode, String subjectCode) {
+        float averageGrade = 0.0f;
+
+        Subject subject = subjectdao.getSubjectByCode(subjectCode);
+        if (subject != null) {
+            StudentSubject studentSubject = subjectdao.getStudentSubject(userCode, subjectCode);
+            if (studentSubject != null) {
+                float hesodiem1 = subject.getHesodiem1();
+                float hesodiem2 = subject.getHesodiem2();
+                float hesodiem3 = subject.getHesodiem3();
+                float hesodiem4 = subject.getHesodiem4();
+                float hesodiem5 = subject.getHesodiem5();
+
+                float attendanceExamMark = studentSubject.getAttendancemark();
+                float midExamMark1 = studentSubject.getMidexammark1();
+                float midExamMark2 = studentSubject.getMidexammark2();
+                float midExamMark3 = studentSubject.getMidexammark3();
+                float finalExamMark = studentSubject.getFinalexammark();
+
+                averageGrade = (attendanceExamMark * hesodiem1 +
+                        midExamMark1 * hesodiem2 +
+                        midExamMark2 * hesodiem3 +
+                        midExamMark3 * hesodiem4 +
+                        finalExamMark * hesodiem5) /
+                        (hesodiem1 + hesodiem2 + hesodiem3 + hesodiem4 + hesodiem5);
+            }
+        }
+
+        return averageGrade;
+    }
+	@Override
+	public String toString() {
+	    return "Mã môn: " + subjectcode +
+	           ", Điểm chuyên cần: " + attendancemark +
+	           ", Giữa kỳ 1: " + midexammark1 +
+	           ", Giữa kỳ 2: " + midexammark2 +
+	           ", Giữa kỳ 3: " + midexammark3 +
+	           ", Cuối kỳ: " + finalexammark;
 	}
+
 }

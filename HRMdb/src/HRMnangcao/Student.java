@@ -1,17 +1,24 @@
 package HRMnangcao;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
+
+import model.SubjectDAO;
 
 public class Student extends Human {
 	private String class_;
 	private HashMap<String,Subject> subjectList = new HashMap<String,Subject>();
-	
+	private List<StudentSubject> studentsub = new ArrayList<StudentSubject>();
+	private SubjectDAO subjectdao = new SubjectDAO();
+	private Subject subject;
 	public Student(){
-		
+		 
 	}
 	
 	public Student(String code){
 		super(code);
+		
 	}
 	
 	public Student(String code, String fullname){
@@ -36,15 +43,22 @@ public class Student extends Human {
 	}
 	
 	public float calTermAverageMark() {
-		int sumCredit = 0;
-	    int sumGrade = 0;
-	    StudentSubject stdsub = new StudentSubject();
-	    for (HashMap.Entry<String, Subject> entry : subjectList.entrySet()) {
-	        Subject subject = entry.getValue();
-	        sumCredit += subject.getCredit();
-	        sumGrade += stdsub.calConversionMark(stdsub.calGrade()) * subject.getCredit();
+	    float sumGrade = 0;
+	    int sumCredit = 0;
+
+	    for (StudentSubject stdsub : studentsub) {
+	    	subject = subjectdao.getSubjectByCode(stdsub.getSubjectcode());
+	        if (subject != null) {
+	            int credit = subject.getCredit();
+	            sumCredit += credit;
+	            sumGrade += stdsub.calSubjectMark(code, subject.getSubjectCode()) * credit;
+	        }
 	    }
-	    return (float) sumGrade / sumCredit;
+
+	    if (sumCredit == 0) {
+	        return 0;
+	    }
+	    return sumGrade / sumCredit;
 	}
 	
 	
@@ -71,20 +85,25 @@ public class Student extends Human {
 	@Override
 	public String toString() {
 		StringBuilder stringb = new StringBuilder();
+		
 		 stringb.append("====================////==================\n");
 		 stringb.append("Ho va ten sinh vien: ").append(fullname).append("\n");
 		 stringb.append("Ma sinh vien: ").append(code).append("\n");
 		 stringb.append("Đia chi: ").append(address).append("\n");
 		 stringb.append("Lop: ").append(class_).append("\n");
-		 if (subjectList.isEmpty()) {
+		 studentsub=subjectdao.getAllStudentSubjects(code);
+		 
+		 if (studentsub.isEmpty()) {
 			 stringb.append("Sinh vien khong co mon hoc nao trong ky");
 			 return stringb.toString();
 		 }
+		
 		stringb.append("Danh sach mon hoc:\n");
-		for (Subject s : subjectList.values()) {
-		    	stringb.append(s).append("\n");
-		}	
-		stringb.append("Diem trung binh hoc ky: ").append(calTermAverageMark()).append("\n");
+		for (StudentSubject s : studentsub) {
+		    stringb.append(s).append("\n"); 
+		    stringb.append("Diem trung binh mon ").append(s.calSubjectMark(code,s.getSubjectcode())).append("\n");
+		}
+		stringb.append("Diem trung binh hoc ky: ").append(calTermAverageMark());
 		return stringb.toString();
 	}
 }

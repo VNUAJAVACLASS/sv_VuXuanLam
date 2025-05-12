@@ -20,7 +20,8 @@ public class Main {
             System.out.println("6. Danh sach mon hoc.");
             System.out.println("7. Them mon hoc.");
             System.out.println("8. Dang ky mon hoc.");
-            System.out.println("9. Thoát chương trình.");
+            System.out.println("9. Cập nhật điểm của sinh viên.");
+            System.out.println("10. Thoát chương trình.");
             System.out.print("Chuc nang ban chon la: ");
             
             int choice = sc.nextInt();
@@ -61,7 +62,11 @@ public class Main {
                     scontroller.dangKyMonHoc(sc);
                     waitForZero(sc);
                     break;
-                case 9:
+                case 9: 
+                	scontroller.suaDiem(sc);
+                	waitForZero(sc);
+                	break;
+                case 10:
                 	System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
                     return;
                 default:
