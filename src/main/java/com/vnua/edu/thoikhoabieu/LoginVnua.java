@@ -7,13 +7,16 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.lang.model.element.Element;
+import org.jsoup.nodes.Element;
+
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,11 +24,14 @@ import org.jsoup.nodes.Document;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.WaitForSelectorState;
 
 public class LoginVnua {
 
+	private ChuongTrinhChinh ct = new ChuongTrinhChinh();
     public String taoFileHtml(NguoiDung nguoidung) {
         String cacheDir = "src/main/java/resources";
         try {
@@ -117,40 +123,52 @@ public class LoginVnua {
         page.keyboard().press("Escape");
         return dsHocKy;
     }
-    private String startDateOfTerm(Page page) {
-        // Bước 1: Mở tab thời khoá biểu
-        page.waitForSelector("#WEB_TKB_1TUAN");
-        page.click("#WEB_TKB_1TUAN");
+    public LocalDate startDateOfTerm(Page page) {
+        // Vào thời khóa biểu tuần
+        page.locator("//a[@id='WEB_TKB_1TUAN']").click();
+        page.waitForSelector("//a[@id='WEB_TKB_1TUAN']");
 
-        // Bước 2: Mở combobox chọn tuần
-        page.waitForSelector("ng-select[bindlabel='thong_tin_tuan'] .ng-select-container");
-        page.click("ng-select[bindlabel='thong_tin_tuan'] .ng-select-container");
+        // Click mở dropdown chọn tuần
+        Locator weekDropdown = page.locator(
+            "#fullScreen > div.card-body.p-0 > div.row.text-nowrap.px-1.pb-1 > div.d-inline-block.col-lg-7.col-md-12.col-sm-12.mb-1 > ng-select > div > div > div.ng-input"
+        );
+        weekDropdown.click();
 
-        // Bước 3: Đợi dropdown hiện ra
-        page.waitForSelector(".ng-dropdown-panel");
+        // Đợi dropdown hiển thị
+        page.waitForSelector(".ng-dropdown-panel-items.scroll-host");
 
-        // Bước 4: Lấy HTML của dropdown
-        String dropdownHtml = page.innerHTML(".ng-dropdown-panel");
+        // Cuộn dropdown về đầu
+        page.evaluate("() => document.querySelector('.ng-dropdown-panel-items.scroll-host')?.scrollTo(0, 0)");
+        page.waitForTimeout(1000); // Chờ cuộn xong
 
-        // Bước 5: Phân tích với Jsoup
-        Document doc = Jsoup.parse(dropdownHtml);
-        Element firstOption = (Element) doc.selectFirst("div.ng-option span.ng-option-label");
+        // Tìm phần tử đầu tiên trong dropdown
+        Locator firstOption = page.locator(
+            "//div[@class='ng-dropdown-panel-items scroll-host']//div[contains(@class, 'ng-option')][1]"
+        );
 
-        if (firstOption != null) {
-            String text = ((org.jsoup.nodes.Element) firstOption).text();
+        // Đảm bảo phần tử tồn tại và đã hiển thị
+        firstOption.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
 
-            
-            Pattern pattern = Pattern.compile("từ ngày (\\d{2}/\\d{2}/\\d{4})");
-            Matcher matcher = pattern.matcher(text);
-
-            if (matcher.find()) {
-                String firstDay = matcher.group(1); 
-                return firstDay;
-            }
+        // Lấy nội dung
+        String weekText = firstOption.textContent();
+        if (weekText == null || !weekText.contains("từ ngày")) {
+            throw new RuntimeException("Không tìm thấy thông tin tuần hợp lệ.");
         }
 
-        return null; 
+        Pattern pattern = Pattern.compile("từ ngày (\\d{2}/\\d{2}/\\d{4})");
+        Matcher matcher = pattern.matcher(weekText);
+
+        if (matcher.find()) {
+            String dateString = matcher.group(1);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return LocalDate.parse(dateString, formatter);
+        } else {
+            throw new RuntimeException("Không trích xuất được ngày bắt đầu từ thông tin tuần.");
+        }
     }
+
+
+
 
     private String chonHocKy(Page page) {
         List<String> dsHocKy = layDanhSachHocKy(page);
@@ -188,11 +206,10 @@ public class LoginVnua {
         page.waitForSelector("table.table");
 
         String htmltkb = (String) page.evaluate("document.querySelector('table.table').outerHTML");
-        String abc=startDateOfTerm(page);
-        ChuongTrinhChinh ct = new ChuongTrinhChinh();
-        ct.setFirstDayOfTerm(abc);
-        System.out.println("FIRSTDAYOFTERM" + ct.getFirstDayOfTerm());
-        System.out.println("FIRSTDAYOFTERM" + abc);
+        LocalDate abc=startDateOfTerm(page);
+        ChuongTrinhChinh.getInstance().setFirstDayOfTerm(abc);
+
+        System.out.println("FIRSTDAYOFTERM: " + ChuongTrinhChinh.getInstance().getFirstDayOfTerm());
         return htmltkb;
     }
 
