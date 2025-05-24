@@ -27,9 +27,9 @@ public class NguoiDung {
 		this.matKhau = matKhau;
 	}
 	public void dangNhap(Scanner sc) {
-		System.out.println("Nhap vao ten tai khoan: ");
+		System.out.print("Nhap vao ten tai khoan: ");
 		taiKhoan=sc.nextLine();
-		System.out.println("\nNhap vao mat khau: ");
+		System.out.print("\nNhap vao mat khau: ");
 		matKhau=sc.nextLine();
 	}
 

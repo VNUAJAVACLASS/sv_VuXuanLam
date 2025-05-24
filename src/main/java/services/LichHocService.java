@@ -1,7 +1,6 @@
 package services;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.vnua.edu.thoikhoabieu.DocDuLieu;
@@ -11,9 +10,19 @@ import com.vnua.edu.thoikhoabieu.MonHoc;
 import com.vnua.edu.thoikhoabieu.Ngay;
 import com.vnua.edu.thoikhoabieu.Tuan;
 
+/*
+ * Lớp dịch vụ quản lý và xử lý thời khóa biểu
+ * Cung cấp các phương thức để in thời khóa biểu theo ngày, tuần, hoặc toàn bộ
+ */
 public class LichHocService {
+    // Biến lưu trữ đối tượng LichHoc đã đọc được từ nguồn dữ liệu
     private final LichHoc tkb;
 
+    /*
+     * Hàm khởi tạo lớp LichHocService,
+     * đọc dữ liệu thời khóa biểu từ đường dẫn URL được truyền vào.
+     * Nếu không đọc được sẽ ném ra ngoại lệ RuntimeException.
+     */
     public LichHocService(String url) {
         try {
             this.tkb = DocDuLieu.parseTKB(url);
@@ -22,12 +31,16 @@ public class LichHocService {
         }
     }
 
+    /*
+     * In thời khóa biểu của ngày hôm nay ra màn hình console.
+     * Nếu không có dữ liệu sẽ báo không có dữ liệu.
+     */
     public void printTKBToday() {
         LocalDate today = LocalDate.now();
 
         System.out.println("Hôm nay là: " + today);
 
-        // Lấy Ngay trực tiếp từ map theo ngày
+        // Lấy đối tượng Ngay ứng với ngày hiện tại
         Ngay ngay = tkb.getNgayTheoNgay(today);
 
         if (ngay == null) {
@@ -41,7 +54,11 @@ public class LichHocService {
         inNgay(thu, today, ngay);
     }
 
-
+    /*
+     * Chuyển số thứ trong tuần thành tên thứ trong tiếng Việt.
+     * Ví dụ 2 -> "Thứ 2", 8 -> "Chủ Nhật".
+     * Nếu không hợp lệ trả về "Không xác định"
+     */
     private String inThu(int thu) {
         switch (thu) {
             case 2: return "Thứ 2";
@@ -55,6 +72,11 @@ public class LichHocService {
         }
     }
 
+    /*
+     * In ra chi tiết thời khóa biểu của một ngày.
+     * Nếu không có môn học sẽ báo "Không có môn học".
+     * Hiển thị thứ, ngày và danh sách môn học.
+     */
     private void inNgay(int thu, LocalDate date, Ngay ngay) {
         System.out.println(inThu(thu) + (date != null ? " (" + date + ")" : "") + ":");
         if (ngay == null || ngay.getDanhSachMon().isEmpty()) {
@@ -66,6 +88,11 @@ public class LichHocService {
         }
     }
 
+    /*
+     * In chi tiết thông tin một môn học,
+     * bao gồm mã môn, tên môn, tiết bắt đầu, số tiết, thời gian học,
+     * phòng học và giảng viên.
+     */
     private void inMon(MonHoc mh) {
         String thoiGian = doiTietSangGio(mh.getTietBatDau(), mh.getSoTiet());
         System.out.println("Mã môn:" + mh.getMaMonHoc() +
@@ -77,6 +104,11 @@ public class LichHocService {
                            "|| Giảng viên: " + mh.getGiangVien());
     }
 
+    /*
+     * In toàn bộ thời khóa biểu của tuần hiện tại,
+     * dựa vào ngày bắt đầu học kỳ đã được thiết lập.
+     * Nếu chưa thiết lập ngày bắt đầu sẽ cảnh báo.
+     */
     public void inTKBTuanHienTai() {
         LocalDate today = LocalDate.now();
         int tuan = LayVeNgayHienTai.getWeekFromDate(today);
@@ -89,7 +121,6 @@ public class LichHocService {
             return;
         }
 
-        // Lấy ngày bắt đầu học kỳ từ class đã set
         LocalDate startDate = LayVeNgayHienTai.getStartDate();
         if (startDate == null) {
             System.out.println("⚠️ Chưa có ngày bắt đầu học kỳ được thiết lập!");
@@ -98,13 +129,15 @@ public class LichHocService {
 
         for (int thu = 2; thu <= 7; thu++) {
             Ngay ngay = t.getNgay(thu);
-            // Tính ngày thực tế dựa trên startDate
             LocalDate date = startDate.plusDays((tuan - 1) * 7 + (thu - 2));
             inNgay(thu, date, ngay);
         }
     }
 
-
+    /*
+     * In thời khóa biểu của một tuần cụ thể.
+     * Nếu không có dữ liệu tuần đó sẽ thông báo.
+     */
     public void inTKBTheoTuan(int tuan) {
         Tuan t = tkb.getDanhSachTuan().get(tuan);
         if (t == null) {
@@ -115,6 +148,10 @@ public class LichHocService {
         printAll(tuan, t);
     }
 
+    /*
+     * In thời khóa biểu theo ngày cụ thể.
+     * Tính ra tuần và thứ trong tuần dựa trên ngày truyền vào.
+     */
     public void inTKBTheoNgay(LocalDate date) {
         int tuan = LayVeNgayHienTai.getWeekFromDate(date);
         int thu = LayVeNgayHienTai.getThuFromDate(date);
@@ -130,6 +167,10 @@ public class LichHocService {
         inNgay(thu, date, ngay);
     }
 
+    /*
+     * In toàn bộ thời khóa biểu của tất cả các tuần có trong dữ liệu.
+     * Nếu không có tuần nào sẽ báo.
+     */
     public void printAllTKB() {
         Map<Integer, Tuan> danhSachTuan = tkb.getDanhSachTuan();
 
@@ -146,8 +187,12 @@ public class LichHocService {
         }
     }
 
+    /*
+     * Hàm hỗ trợ in tất cả các ngày trong một tuần cụ thể,
+     * tính ngày thực tế dựa trên ngày bắt đầu học kỳ.
+     */
     private void printAll(int soTuan, Tuan tuan) {
-        LocalDate startDate = LayVeNgayHienTai.getStartDate(); // Lấy ngày bắt đầu động
+        LocalDate startDate = LayVeNgayHienTai.getStartDate();
         if (startDate == null) {
             System.out.println("⚠️ Chưa có ngày bắt đầu học kỳ được thiết lập!");
             return;
@@ -156,13 +201,17 @@ public class LichHocService {
         for (Map.Entry<Integer, Ngay> entryNgay : tuan.getDanhSachNgay().entrySet()) {
             int thu = entryNgay.getKey();
             Ngay ngay = entryNgay.getValue();
-            // Tính ngày thực tế
             LocalDate date = startDate.plusDays((soTuan - 1) * 7 + (thu - 2));
             inNgay(thu, date, ngay);
         }
     }
 
-
+    /*
+     * Chuyển đổi tiết học và số tiết thành khung giờ cụ thể.
+     * Mỗi tiết học kéo dài 50 phút, nghỉ giữa các tiết 5 phút.
+     * Bắt đầu từ 7h00 sáng.
+     * Trả về chuỗi định dạng "giờ bắt đầu - giờ kết thúc"
+     */
     public static String doiTietSangGio(int tietBatDau, int soTiet) {
         int tietDuration = 50;
         int breakDuration = 5;
