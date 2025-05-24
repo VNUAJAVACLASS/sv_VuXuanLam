@@ -1,7 +1,6 @@
 package model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,21 +11,18 @@ import java.util.List;
 import HRMnangcao.Human;
 import HRMnangcao.Lecturer;
 import HRMnangcao.Student;
+import config.ConnectDB;
 
 public class UserDAO  implements IUserDAO{
-	
+	private ConnectDB connect;
 	private Connection connection;
 	
-	public UserDAO() {
-		try {
-			String dbURL ="jdbc:ucanaccess://lib/baitoantinchi.accdb";
-			connection =DriverManager.getConnection(dbURL);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public UserDAO(){
+		connect = new ConnectDB();
+		connect.connectMySQL();
+		connection=connect.getConnection();
+		
 	}
-
 	public List<Human> getAllUsers(){
 		List<Human> userList = new ArrayList<Human>();
 		String query ="SELECT * FROM tbl_users";

@@ -23,7 +23,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.WaitForSelectorState;
 
-public class LoginVnua {
+public class LoginVnua implements ILoginVnua{
 
 	public String taoFileHtml(NguoiDung nguoidung) {
 	    String cacheDir = "src/main/java/resources";
@@ -86,7 +86,7 @@ public class LoginVnua {
 
 
     // Thực hiện đăng nhập vào hệ thống bằng thông tin tài khoản người dùng
-    private void dangNhapHeThong(Page page, NguoiDung nguoidung) {
+    public void dangNhapHeThong(Page page, NguoiDung nguoidung) {
         page.navigate("https://daotao.vnua.edu.vn/#/home");
 
         // Chờ nút đăng nhập hiện ra rồi bấm vào
@@ -122,14 +122,14 @@ public class LoginVnua {
     }
 
     // Khởi tạo trình duyệt Chromium với chế độ hiển thị (không chạy ẩn)
-    private Browser initBrowser(Playwright playwright) {
+    public Browser initBrowser(Playwright playwright) {
         return playwright.chromium().launch(
                 new BrowserType.LaunchOptions().setHeadless(true)
         );
     }
 
     // Lấy danh sách các học kỳ có thể chọn trên trang
-    private List<String> layDanhSachHocKy(Page page) {
+    public List<String> layDanhSachHocKy(Page page) {
         List<String> dsHocKy = new ArrayList<>();
 
         page.waitForSelector("#WEB_TKB_HK");
@@ -152,7 +152,7 @@ public class LoginVnua {
     }
 
  // Hàm tiện lợi tạo đường dẫn file trong thư mục resources
-    private Path taoDuongDanFile(String tenFile) {
+    public Path taoDuongDanFile(String tenFile) {
         Path resourceDir = Paths.get("src/main/java/resources");
         try {
             if (!Files.exists(resourceDir)) {
@@ -219,7 +219,7 @@ public class LoginVnua {
     }
 
   // Cho người dùng chọn học kỳ muốn xem thời khóa biểu
-    private String chonHocKy(Page page) {
+    public String chonHocKy(Page page) {
         List<String> dsHocKy = layDanhSachHocKy(page);
 
         System.out.println("==========////Danh sách học kỳ hiện có////==========");
@@ -244,7 +244,7 @@ public class LoginVnua {
     }
 
     // Lấy thời khóa biểu theo học kỳ đã chọn và thiết lập ngày bắt đầu học kỳ
-    private String layThoiKhoaBieu(Page page) {
+    public String layThoiKhoaBieu(Page page) {
         page.waitForTimeout(2000);
 
         // Yêu cầu người dùng chọn học kỳ

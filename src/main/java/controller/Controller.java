@@ -3,6 +3,7 @@ package controller;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import com.vnua.edu.thoikhoabieu.ILoginVnua;
 import com.vnua.edu.thoikhoabieu.LoginVnua;
 import com.vnua.edu.thoikhoabieu.NguoiDung;
 
@@ -10,18 +11,17 @@ import services.LichHocService;
 
 public class Controller {
     private LichHocService lhService;
-    private LoginVnua login;
+    private ILoginVnua ilogin;
     private NguoiDung nguoidung;
 
     public Controller() {
-       
-        this.login = new LoginVnua();
+    	this.ilogin= new LoginVnua();
         this.nguoidung = new NguoiDung();
     }
 
     private void taoFileHtml() {
         
-        login.taoFileHtml(nguoidung); 
+    	ilogin.taoFileHtml(nguoidung); 
         
         // Đọc file TKB đã tạo
         String TKB_URL = "src/main/java/resources/tkb_msv_" + nguoidung.getTaiKhoan() + ".html";
