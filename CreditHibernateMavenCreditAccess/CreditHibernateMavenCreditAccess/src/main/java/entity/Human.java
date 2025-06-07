@@ -1,23 +1,24 @@
-package HRMnangcao;
+package entity;
 
 import java.util.Scanner;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 
 @MappedSuperclass
-public abstract class Human {
+public class Human {
 	@Id
-	@Column(name= "user_code")
+	@Column(name = "user_code")
 	protected String code;
-	@Column(name ="fullname")
-	protected String fullname;
-	@Column(name ="address")
-	protected String address;
-	@Column(name ="type")
-	protected int type;
 
+	@Column(name = "fullname")
+	protected String fullname;
+	
+	@Column(name = "address")
+	protected String address;
+	
 	public Human(){
 		
 	};
@@ -37,13 +38,14 @@ public abstract class Human {
 		this.address = address;
 	}
 	
-	public Human(String code, String fullname, String address,int type){
-		this(code,fullname,address);
-		this.type=type;
+	public void enterInfo(Scanner sc){
+		System.out.println("Nhap vao ten: ");
+		this.fullname = sc.nextLine();
+		System.out.println("Nhap vao ma code: ");
+		this.code = sc.nextLine();
+		System.out.println("Nhap vao dia chi: ");
+		this.address = sc.nextLine();
 	}
-	
-	public abstract void enterInfo(Scanner sc);
-		
 
 	public String getAddress() {
 		return address;
@@ -68,12 +70,9 @@ public abstract class Human {
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
-	public int getType() {
-		return type;
-	}
 
-	public void setType(int type) {
-		this.type = type;
+	@Override
+	public String toString() {
+		return "Human [address=" + address + ", code=" + code + ", fullname=" + fullname + "]";
 	}
-
 }

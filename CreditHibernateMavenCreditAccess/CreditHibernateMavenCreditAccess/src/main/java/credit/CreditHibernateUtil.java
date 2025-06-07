@@ -1,4 +1,4 @@
-package HRMnangcao;
+package credit;
 
 import java.util.Properties;
 
@@ -8,8 +8,10 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
+import entity.Student;
 
-public class CreditHibernate {
+
+public class CreditHibernateUtil {
     private static SessionFactory sessionFactory;
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
