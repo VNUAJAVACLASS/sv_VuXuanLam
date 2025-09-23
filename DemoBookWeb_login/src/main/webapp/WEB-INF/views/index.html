@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8">
+  <title>Trang tin tức</title>
+  <style>
+    /* Reset nhẹ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f9f9f9, #e3f2fd);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h3 {
+      font-size: 1.8rem;
+      color: #1976d2;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px #ccc;
+    }
+
+    a {
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      background: #1976d2;
+      color: #fff;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      transition: 0.3s ease;
+    }
+
+    a:hover {
+      background: #0d47a1;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
 <body>
-<h3>Trang được load mặc định ban đầu</h3>
-<a href="adminHome">Xem danh sách tin tức</a>
+  <h3>Trang được load mặc định ban đầu</h3>
+  <a href="adminHome">Xem danh sách tin tức</a>
 </body>
 </html>
