@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<fmt:setLocale value="vi_VN" />
+
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -161,7 +164,7 @@ h2 {
 table {
 	width: 100%;
 	border-collapse: collapse;
-	min-width: 560px;
+	min-width: 680px;
 	background: #fff
 }
 
@@ -242,7 +245,7 @@ tbody tr:hover {
 			</div>
 		</div>
 
-		<!-- Flash message (nếu có) -->
+
 		<c:if test="${not empty message}">
 			<div class="flash">${message}</div>
 		</c:if>
@@ -254,39 +257,53 @@ tbody tr:hover {
 						<tr>
 							<th style="width: 80px">ID</th>
 							<th>Tiêu đề</th>
+							<th style="width: 140px">Giá</th>
+							<!-- 🆕 -->
 							<th style="width: 220px">Hành động</th>
+							<th style="width: 220px">Giỏ hàng</th>
 						</tr>
 					</thead>
+
 					<tbody>
 						<c:choose>
 							<c:when test="${empty BookList}">
 								<tr>
-									<td colspan="3" class="empty">Chưa có tin nào. Nhấn <b>“+
+									<td colspan="5" class="empty">Chưa có tin nào. Nhấn <b>“+
 											Tạo tin mới”</b> để thêm nha.
 									</td>
 								</tr>
 							</c:when>
 							<c:otherwise>
-								<c:forEach var="Book" items="${BookList}">
+								<c:forEach var="book" items="${BookList}">
 									<tr>
-										<td><span class="muted">#</span>${Book.id}</td>
+										<td><span class="muted">#</span>${book.id}</td>
 										<td><a class="link"
-											href="${pageContext.request.contextPath}/adminHome?action=detail&id=${Book.id}">
-												${Book.title} </a></td>
+											href="${pageContext.request.contextPath}/adminHome?action=detail&id=${book.id}">
+												${book.title} </a></td>
+
+										<td><fmt:formatNumber value="${book.price}" type="number" />
+											đ</td>
 										<td><a class="btn btn-warning"
-											href="${pageContext.request.contextPath}/adminHome?action=edit&id=${Book.id}">Sửa</a>
+											href="${pageContext.request.contextPath}/adminHome?action=edit&id=${book.id}">Sửa</a>
 											<a class="btn btn-danger"
-											href="${pageContext.request.contextPath}/adminHome?action=delete&id=${Book.id}"
+											href="${pageContext.request.contextPath}/adminHome?action=delete&id=${book.id}"
 											onclick="return confirm('Xóa tin này?');">Xóa</a></td>
-										<td><form action="cart" method="post">
-												<input type="hidden" name="id" value="${book.id}">
+										<td>
+											<form action="${pageContext.request.contextPath}/cart"
+												method="post">
+												<input type="hidden" name="action" value="add"> <input
+													type="hidden" name="id" value="${book.id}"> <input
+													type="number" name="qty" value="1" min="1"
+													style="width: 80px">
 												<button type="submit">🛒 Thêm vào giỏ</button>
-											</form></td>
+											</form>
+										</td>
 									</tr>
 								</c:forEach>
 							</c:otherwise>
 						</c:choose>
 					</tbody>
+
 				</table>
 			</div>
 

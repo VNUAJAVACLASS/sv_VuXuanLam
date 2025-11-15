@@ -17,13 +17,30 @@
 		<url-pattern>/adminHome</url-pattern>
 	</servlet-mapping>
 	<servlet>
-    <servlet-name>CartServlet</servlet-name>
-    <servlet-class>controller.CartServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>CartServlet</servlet-name>
-    <url-pattern>/cart</url-pattern>
-</servlet-mapping>
-	
+		<servlet-name>CartServlet</servlet-name>
+		<servlet-class>controller.CartServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CartServlet</servlet-name>
+		<url-pattern>/cart</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>CheckoutServlet</servlet-name>
+		<servlet-class>controller.CheckoutServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CheckoutServlet</servlet-name>
+		<url-pattern>/checkout</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>PaymentSuccess</servlet-name>
+		<jsp-file>/payment-success.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PaymentSuccess</servlet-name>
+		<url-pattern>/payment-success</url-pattern>
+	</servlet-mapping>
+
 
 </web-app>

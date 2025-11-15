@@ -6,14 +6,15 @@ import service.BookService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CartServlet extends HttpServlet {
 
-    private final BookService bookService = new BookService();
-
+    private final BookService bookService = new BookService(); 
     @SuppressWarnings("unchecked")
     private List<CartItem> getCart(HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -24,10 +25,22 @@ public class CartServlet extends HttpServlet {
         return cart;
     }
 
+    private Integer getIntParam(HttpServletRequest req, String name) {
+        String v = req.getParameter(name);
+        if (v == null) return null;
+        v = v.trim();
+        if (v.isEmpty()) return null;
+        try { return Integer.valueOf(v); } catch (NumberFormatException e) { return null; }
+    }
+
+    private int getValidQty(HttpServletRequest req, String name) {
+        Integer q = getIntParam(req, name);
+        return (q == null || q <= 0) ? 1 : q;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Hiển thị giỏ
         req.getRequestDispatcher("/WEB-INF/views/cart.jsp").forward(req, resp);
     }
 
@@ -42,9 +55,10 @@ public class CartServlet extends HttpServlet {
 
         switch (action) {
             case "add": {
-                int id = Integer.parseInt(req.getParameter("id"));
-                int qty = 1;
-                try { qty = Math.max(1, Integer.parseInt(req.getParameter("qty"))); } catch (Exception ignored) {}
+                Integer id = getIntParam(req, "id");
+                if (id == null) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu hoặc sai định dạng id"); return; }
+
+                int qty = getValidQty(req, "qty");
                 Book b = bookService.findById(id);
                 if (b != null) {
                     boolean found = false;
@@ -54,23 +68,27 @@ public class CartServlet extends HttpServlet {
                             found = true; break;
                         }
                     }
-                    if (!found) cart.add(new CartItem(b, qty));
+                    if (!found) {
+                        long price = bookService.getPriceById(id); // đọc từ DB book
+                        cart.add(new CartItem(b, qty, price));
+                    }
                 }
                 resp.sendRedirect(req.getContextPath() + "/cart");
                 return;
             }
             case "update": {
-                int id = Integer.parseInt(req.getParameter("id"));
-                int qty = Math.max(1, Integer.parseInt(req.getParameter("qty")));
-                cart.removeIf(it -> {
-                    if (it.getBook().getId() == id) { it.setQuantity(qty); }
-                    return false;
-                });
+                Integer id = getIntParam(req, "id");
+                if (id == null) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu hoặc sai định dạng id"); return; }
+                int qty = getValidQty(req, "qty");
+                for (CartItem it : cart) {
+                    if (it.getBook().getId() == id) { it.setQuantity(qty); break; }
+                }
                 resp.sendRedirect(req.getContextPath() + "/cart");
                 return;
             }
             case "remove": {
-                int id = Integer.parseInt(req.getParameter("id"));
+                Integer id = getIntParam(req, "id");
+                if (id == null) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu hoặc sai định dạng id"); return; }
                 cart.removeIf(it -> it.getBook().getId() == id);
                 resp.sendRedirect(req.getContextPath() + "/cart");
                 return;
