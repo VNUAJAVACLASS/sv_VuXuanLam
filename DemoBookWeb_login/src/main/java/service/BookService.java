@@ -70,4 +70,15 @@ public class BookService {
         if (id <= 0) return false;
         return dao.delete(id);
     }
+    public List<Book> getNewestBooks(int limit) {
+        return dao.findNewest(limit);
+    }
+
+    public List<Book> getTopBooks(int limit) {
+        return dao.findTopBooks(limit);
+    }
+
+    public List<Book> searchByTitle(String keyword) {
+        return dao.searchByTitle(keyword);
+    }
 }
