@@ -1,29 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-	id="WebApp_ID" version="4.0">
-	<display-name>DemoBookWeb_login</display-name>
-	<welcome-file-list>
-		<welcome-file>adminHome</welcome-file>
-	</welcome-file-list>
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         id="WebApp_ID" version="4.0">
 
-	<servlet>
-		<servlet-name>AdminHomeServlet</servlet-name>
-		<servlet-class>controller.AdminServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AdminHomeServlet</servlet-name>
-		<url-pattern>/adminHome</url-pattern>
-	</servlet-mapping>
-	<servlet>
-    <servlet-name>CartServlet</servlet-name>
-    <servlet-class>controller.CartServlet</servlet-class>
+    <display-name>DemoBookWeb_login</display-name>
+
+    <!-- Trang chào mừng -->
+    <welcome-file-list>
+        <welcome-file>adminHome</welcome-file>
+    </welcome-file-list>
+
+    <!-- ================== SERVLET CHỈ DÙNG web.xml (không có @WebServlet) ================== -->
+
+    <!-- 1. Admin Home -->
+    <servlet>
+        <servlet-name>AdminHomeServlet</servlet-name>
+        <servlet-class>controller.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminHomeServlet</servlet-name>
+        <url-pattern>/adminHome</url-pattern>
+    </servlet-mapping>
+
+    <!-- 2. CartServlet (nếu KHÔNG có @WebServlet) -->
+    <servlet>
+        <servlet-name>CartServlet</servlet-name>
+        <servlet-class>controller.CartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <!-- 3. CheckoutServlet (nếu KHÔNG có @WebServlet) -->
+    <servlet>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <servlet-class>controller.CheckoutServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+
+    <!-- 4. Payment Success JSP (dùng servlet để forward) -->
+    <servlet>
+        <servlet-name>PaymentSuccess</servlet-name>
+        <jsp-file>/payment-success.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PaymentSuccess</servlet-name>
+        <url-pattern>/payment-success</url-pattern>
+    </servlet-mapping>
+
+    <!-- 5. PaymentServlet (nếu còn dùng) -->
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>controller.PaymentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/payment</url-pattern>
+    </servlet-mapping>
+<servlet>
+    <servlet-name>PaymentReturnServlet</servlet-name>
+    <servlet-class>controller.PaymentReturnServlet</servlet-class>
 </servlet>
 <servlet-mapping>
-    <servlet-name>CartServlet</servlet-name>
-    <url-pattern>/cart</url-pattern>
+    <servlet-name>PaymentReturnServlet</servlet-name>
+    <url-pattern>/payment-return</url-pattern>
 </servlet-mapping>
-	
-
 </web-app>

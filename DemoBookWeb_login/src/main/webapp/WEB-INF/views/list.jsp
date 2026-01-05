@@ -1,315 +1,464 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<fmt:setLocale value="vi_VN" />
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Danh sách tin tức</title>
+<title>Quản lý sách - Admin</title>
+
 <style>
 :root {
-	--primary: #1976d2;
-	--primary-dark: #0d47a1;
-	--bg: #f3f6fa;
-	--text: #2c3e50;
-	--muted: #6b7280;
-	--danger: #e53935;
-	--warning: #f59e0b;
-	--radius: 12px;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --bg: #f0f4f8;
+    --text: #1e293b;
+    --muted: #64748b;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --warning: #facc15;
+    --radius: 14px;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESET */
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-	font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-	background: var(--bg);
-	color: var(--text);
-	min-height: 100vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 24px;
+    background: var(--bg);
+    font-family: "Inter", sans-serif;
+    color: var(--text);
 }
 
+/* ===== ADMIN SHELL + HEADER ===== */
+.admin-shell {
+    min-height: 100vh;
+}
+
+.admin-header {
+    background: #0f172a;
+    color: #e5e7eb;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-brand {
+    font-weight: 800;
+    letter-spacing: .04em;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.admin-sub {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.admin-brand-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 14px;
+}
+
+.admin-nav a {
+    color: #e5e7eb;
+    text-decoration: none;
+    opacity: .9;
+}
+
+.admin-nav a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.admin-nav .logout-link {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-nav .logout-link:hover {
+    background: #dc2626;
+}
+
+/* PAGE WRAPPER */
 .page {
-	width: 100%;
-	max-width: 980px;
-	background: #fff;
-	border-radius: var(--radius);
-	box-shadow: 0 10px 24px rgba(0, 0, 0, .08);
-	overflow: hidden;
+    width: 100%;
+    max-width: 1040px;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: fadeIn .3s ease;
+    margin: 24px auto 32px;
 }
 
+/* TOP BAR */
 .topbar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 16px 20px;
-	background: #fff;
-	border-bottom: 1px solid #eef2f7;
+    padding: 16px 22px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.hello {
-	font-weight: 600
+.topbar b { color: var(--primary); }
+
+/* BUTTONS */
+.btn {
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-decoration: none;
+    border: none;
 }
 
-.hello small {
-	color: var(--muted);
-	font-weight: 400
-}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
-.link {
-	color: var(--primary);
-	text-decoration: none;
-	font-weight: 600
-}
+.btn-warning { background: var(--warning); color: #111; }
+.btn-warning:hover { filter: brightness(0.92); transform: translateY(-1px); }
 
-.link:hover {
-	color: var(--primary-dark)
-}
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: var(--danger-hover); transform: translateY(-1px); }
 
+/* HEADER */
 .header {
-	padding: 20px;
-	display: flex;
-	gap: 12px;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
+    padding: 22px 26px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-h2 {
-	color: var(--primary)
-}
+h2 { font-size: 24px; font-weight: 700; }
 
 .actions {
-	display: flex;
-	gap: 10px;
-	align-items: center;
-	flex-wrap: wrap
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-.btn {
-	display: inline-block;
-	border: none;
-	border-radius: 10px;
-	padding: 10px 14px;
-	font-weight: 600;
-	text-decoration: none;
-	cursor: pointer;
-	transition: .2s;
-}
-
-.btn-primary {
-	background: var(--primary);
-	color: #fff
-}
-
-.btn-primary:hover {
-	background: var(--primary-dark);
-	transform: translateY(-1px)
-}
-
-.btn-warning {
-	background: var(--warning);
-	color: #111
-}
-
-.btn-warning:hover {
-	filter: brightness(.95);
-	transform: translateY(-1px)
-}
-
-.btn-danger {
-	background: var(--danger);
-	color: #fff
-}
-
-.btn-danger:hover {
-	filter: brightness(.95);
-	transform: translateY(-1px)
-}
-
+/* SEARCH */
 .search {
-	display: flex;
-	gap: 8px;
-	align-items: center;
-	background: #f8fafc;
-	border: 1px solid #e5e7eb;
-	border-radius: 10px;
-	padding: 8px 10px;
+    display: flex;
+    gap: 10px;
+    background: #f8fafc;
+    border-radius: var(--radius);
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
 }
 
 .search input {
-	border: none;
-	outline: none;
-	background: transparent;
-	min-width: 220px;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 240px;
 }
 
-.content {
-	padding: 0 20px 20px
-}
-
+/* TABLE */
 .table-wrap {
-	overflow: auto;
-	border: 1px solid #eef2f7;
-	border-radius: 10px
+    margin: 20px;
+    border-radius: var(--radius);
+    border: 1px solid #e2e8f0;
+    overflow: auto;
 }
 
 table {
-	width: 100%;
-	border-collapse: collapse;
-	min-width: 560px;
-	background: #fff
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
 }
 
 thead th {
-	text-align: left;
-	background: #f8fafc;
-	color: #374151;
-	padding: 12px;
-	border-bottom: 1px solid #eef2f7;
-	font-weight: 700
+    background: #f1f5f9;
+    padding: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 tbody td {
-	padding: 12px;
-	border-bottom: 1px solid #f1f5f9;
-	vertical-align: top
+    padding: 14px;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 tbody tr:hover {
-	background: #fafafa
+    background: #f9fafb;
 }
 
-.muted {
-	color: var(--muted)
-}
+.muted { color: var(--muted); }
 
 .empty {
-	text-align: center;
-	padding: 28px;
-	color: var(--muted)
+    padding: 28px;
+    text-align: center;
+    color: var(--muted);
 }
 
+/* FLASH */
 .flash {
-	margin: 0 20px 16px;
-	background: #ecfdf5;
-	color: #065f46;
-	border: 1px solid #a7f3d0;
-	padding: 10px 12px;
-	border-radius: 10px;
-	font-weight: 600
+    margin: 16px 24px;
+    padding: 12px;
+    background: #ecfdf5;
+    border-left: 4px solid #10b981;
+    color: #065f46;
+    border-radius: var(--radius);
 }
 
-@media ( max-width :600px) {
-	.search input {
-		min-width: 140px
-	}
-	.btn {
-		padding: 9px 12px
-	}
+/* NÚT THÊM GIỎ */
+.btn-cart {
+    background: #22c55e;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.btn-cart:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+}
+
+.btn-cart:active { transform: scale(0.97); }
+
+/* INPUT SỐ LƯỢNG */
+.qty-input {
+    width: 80px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    outline: none;
+    transition: .2s;
+}
+
+.qty-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.25);
+}
+
+/* PAGINATION */
+.pagination {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pagination .btn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #f3f4f6;
+}
+
+.pagination .btn.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* RESPONSIVE */
+
+/* Tablet */
+@media (max-width: 900px) {
+    .header { flex-direction: column; gap: 16px; text-align: center; }
+    .search input { width: 150px; }
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .page { border-radius: 0; }
+    .topbar { flex-direction: column; gap: 6px; text-align: center; }
+    .search { width: 100%; }
+    .search input { width: 100%; }
+    .btn { width: 100%; text-align: center; }
+    table { min-width: 600px; }
+    .btn-cart { width: 100%; justify-content: center; padding: 14px; }
+    .admin-header { padding-inline: 16px; }
 }
 </style>
 </head>
+
 <body>
-	<div class="page">
+<div class="admin-shell">
 
-		<!-- Top bar -->
-		<div class="topbar">
-			<div class="hello">
-				Xin chào: <b>${sessionScope.username}</b> <small>(Admin)</small>
-			</div>
-			<a class="link" href="${pageContext.request.contextPath}/logout">Đăng
-				xuất</a>
-		</div>
+    <!-- HEADER ADMIN CHUNG -->
+    <header class="admin-header">
+        <div class="admin-brand-wrap">
+            <div class="admin-brand">BOOK ADMIN</div>
+            <div class="admin-sub">Quản lý hệ thống hiệu sách online</div>
+        </div>
+      <nav class="admin-nav">
+    <a href="${pageContext.request.contextPath}/home" target="_blank">
+        Xem trang khách
+    </a>
+    <a href="${pageContext.request.contextPath}/adminHome">
+        Quản lý sách
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/orders">
+        Đơn hàng
+    </a>
+    <a href="${pageContext.request.contextPath}/cart">
+        Giỏ hàng
+    </a>
+    <a href="${pageContext.request.contextPath}/logout" class="logout-link">
+        Đăng xuất
+    </a>
+</nav>
 
-		<!-- Header + actions -->
-		<div class="header">
-			<h2>Danh sách tin tức</h2>
-			<div class="actions">
-				<form class="search" method="get"
-					action="${pageContext.request.contextPath}/adminHome">
-					<input type="text" name="q" placeholder="Tìm theo tiêu đề..."
-						value="${param.q}">
-					<button class="btn btn-primary" type="submit">Tìm</button>
-				</form>
-				<a class="btn btn-primary"
-					href="${pageContext.request.contextPath}/adminHome?action=create">+
-					Tạo tin mới</a>
-			</div>
-		</div>
+    </header>
 
-		<!-- Flash message (nếu có) -->
-		<c:if test="${not empty message}">
-			<div class="flash">${message}</div>
-		</c:if>
+    <div class="page">
 
-		<div class="content">
-			<div class="table-wrap">
-				<table>
-					<thead>
-						<tr>
-							<th style="width: 80px">ID</th>
-							<th>Tiêu đề</th>
-							<th style="width: 220px">Hành động</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:choose>
-							<c:when test="${empty BookList}">
-								<tr>
-									<td colspan="3" class="empty">Chưa có tin nào. Nhấn <b>“+
-											Tạo tin mới”</b> để thêm nha.
-									</td>
-								</tr>
-							</c:when>
-							<c:otherwise>
-								<c:forEach var="Book" items="${BookList}">
-									<tr>
-										<td><span class="muted">#</span>${Book.id}</td>
-										<td><a class="link"
-											href="${pageContext.request.contextPath}/adminHome?action=detail&id=${Book.id}">
-												${Book.title} </a></td>
-										<td><a class="btn btn-warning"
-											href="${pageContext.request.contextPath}/adminHome?action=edit&id=${Book.id}">Sửa</a>
-											<a class="btn btn-danger"
-											href="${pageContext.request.contextPath}/adminHome?action=delete&id=${Book.id}"
-											onclick="return confirm('Xóa tin này?');">Xóa</a></td>
-										<td><form action="cart" method="post">
-												<input type="hidden" name="id" value="${book.id}">
-												<button type="submit">🛒 Thêm vào giỏ</button>
-											</form></td>
-									</tr>
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
-					</tbody>
-				</table>
-			</div>
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div>Xin chào: <b>${sessionScope.username}</b></div>
+            <!-- Có thể thay bằng link tới "Đơn hàng" admin -->
+            <a class="btn-primary btn" href="${pageContext.request.contextPath}/admin/orders">
+                Xem đơn hàng
+            </a>
+        </div>
 
-			<!-- Phân trang (nếu backend set các biến page/totalPages) -->
-			<c:if test="${not empty totalPages}">
-				<div
-					style="display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap">
-					<c:forEach var="i" begin="1" end="${totalPages}">
-						<c:choose>
-							<c:when test="${i == page}">
-								<span class="btn" style="background: #e5e7eb; cursor: default">${i}</span>
-							</c:when>
-							<c:otherwise>
-								<a class="btn" style="background: #f3f4f6"
-									href="${pageContext.request.contextPath}/adminHome?page=${i}&q=${param.q}">
-									${i} </a>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
-				</div>
-			</c:if>
-		</div>
+        <!-- HEADER -->
+        <div class="header">
+            <h2>Danh sách sách</h2>
 
-	</div>
+            <div class="actions">
+                <form class="search" method="get" action="${pageContext.request.contextPath}/adminHome">
+                    <input type="text" name="q" placeholder="Tìm theo tiêu đề..." value="${param.q}">
+                    <button class="btn btn-primary" type="submit">Tìm</button>
+                </form>
+
+                <a class="btn btn-primary"
+                   href="${pageContext.request.contextPath}/adminHome?action=create">+ Tạo mới</a>
+            </div>
+        </div>
+
+        <!-- FLASH -->
+        <c:if test="${not empty message}">
+            <div class="flash">${message}</div>
+        </c:if>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 80px">ID</th>
+                        <th>Tiêu đề</th>
+                        <th style="width: 140px">Giá</th>
+                        <th style="width: 220px">Hành động</th>
+                        <th style="width: 220px">Giỏ hàng</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${empty BookList}">
+                            <tr><td colspan="5" class="empty">Chưa có dữ liệu.</td></tr>
+                        </c:when>
+
+                        <c:otherwise>
+                            <c:forEach var="book" items="${BookList}">
+                                <tr>
+                                    <td><span class="muted">#</span>${book.id}</td>
+
+                                    <td>
+                                        <a class="btn-link"
+                                           href="${pageContext.request.contextPath}/adminHome?action=detail&id=${book.id}">
+                                            ${book.title}
+                                        </a>
+                                    </td>
+
+                                    <td><fmt:formatNumber value="${book.price}" type="number"/> đ</td>
+
+                                    <td>
+                                        <a class="btn btn-warning"
+                                           href="${pageContext.request.contextPath}/adminHome?action=edit&id=${book.id}">
+                                            Sửa
+                                        </a>
+
+                                        <a class="btn btn-danger"
+                                           href="${pageContext.request.contextPath}/adminHome?action=delete&id=${book.id}"
+                                           onclick="return confirm('Xóa sách này?');">
+                                            Xóa
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <form action="${pageContext.request.contextPath}/cart" method="post" style="display:flex; gap:10px;">
+                                            <input type="hidden" name="action" value="add">
+                                            <input type="hidden" name="id" value="${book.id}">
+                                            <input class="qty-input" type="number" name="qty" value="1" min="1">
+                                            <button class="btn-cart" type="submit">🛒 Thêm vào giỏ</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <!-- PAGINATION -->
+            <c:if test="${not empty totalPages}">
+                <div class="pagination">
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <c:choose>
+                            <c:when test="${i == page}">
+                                <span class="btn active">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="btn"
+                                   href="${pageContext.request.contextPath}/adminHome?page=${i}&q=${param.q}">
+                                    ${i}
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </div>
+            </c:if>
+
+        </div>
+    </div>
+</div>
 </body>
 </html>

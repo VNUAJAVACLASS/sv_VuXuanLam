@@ -6,29 +6,79 @@ import dao.BookDAO;
 import model.Book;
 
 public class BookService {
-	private BookDAO dao;
+    private final BookDAO dao;
 
-	public BookService() {
-		dao = new BookDAO();
-	}
+    public BookService() {
+        this(new BookDAO());
+    }
 
-	public List<Book> getAllBook() {
-		return dao.getAllBook();
-	}
+    // tiện cho test/DI nếu cần
+    public BookService(BookDAO dao) {
+        this.dao = dao;
+    }
 
-	public boolean addBook(Book Book) {
-		return dao.addBook(Book);
-	}
+    /* ========= READ ========= */
+    public List<Book> getAllBook() {
+        return dao.getAllBook();
+    }
 
-	public Book findById(int id) {
-		return dao.findById(id);
-	}
+    public Book findById(int id) {
+        if (id <= 0) return null;
+        return dao.findById(id);
+    }
 
-	public boolean updateBook(Book Book) {
-		return dao.update(Book);
-	}
+    public long getPriceById(int id) {
+        if (id <= 0) return 0L;
+        return dao.getPriceById(id);
+    }
 
-	public boolean deleteBook(int id) {
-		return dao.delete(id);
-	}
+    /* ========= CREATE / UPDATE ========= */
+    public boolean addBook(Book book) {
+        if (book == null) return false;
+        // sanitize nhẹ
+        String title = book.getTitle() == null ? "" : book.getTitle().trim();
+        String content = book.getContent() == null ? "" : book.getContent().trim();
+        long price = Math.max(0, book.getPrice()); // không cho âm
+
+        book.setTitle(title);
+        book.setContent(content);
+        book.setPrice(price);
+
+        return dao.addBook(book);
+    }
+
+    public boolean updateBook(Book book) {
+        if (book == null || book.getId() <= 0) return false;
+        String title = book.getTitle() == null ? "" : book.getTitle().trim();
+        String content = book.getContent() == null ? "" : book.getContent().trim();
+        long price = Math.max(0, book.getPrice());
+
+        book.setTitle(title);
+        book.setContent(content);
+        book.setPrice(price);
+
+        return dao.update(book);
+    }
+
+    public boolean updatePrice(int id, long price) {
+        if (id <= 0) return false;
+        return dao.updatePrice(id, Math.max(0, price));
+    }
+
+    /* ========= DELETE ========= */
+    public boolean deleteBook(int id) {
+        if (id <= 0) return false;
+        return dao.delete(id);
+    }
+    public List<Book> getNewestBooks(int limit) {
+        return dao.findNewest(limit);
+    }
+
+    public List<Book> getTopBooks(int limit) {
+        return dao.findTopBooks(limit);
+    }
+
+    public List<Book> searchByTitle(String keyword) {
+        return dao.searchByTitle(keyword);
+    }
 }
