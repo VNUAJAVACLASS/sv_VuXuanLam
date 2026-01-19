@@ -64,7 +64,7 @@ onMounted(() => {
           <h3 :title="book.title" @click="viewProduct(book)">{{ book.title }}</h3>
           <p class="author">Tác giả: {{ book.author }}</p>
           <p class="price">{{ formatPrice(book.price) }}</p>
-          <button class="buy-btn" @click="addToCart(book)">Mua ngay</button>
+          <button class="buy-btn" @click="addToCart(book)">Thêm vào giỏ hàng</button>
         </div>
       </div>
     </div>
